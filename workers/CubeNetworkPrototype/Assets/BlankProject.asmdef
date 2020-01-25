@@ -1,0 +1,25 @@
+{
+    "name": "BlankProject",
+    "references": [
+        "Improbable.Gdk.Core",
+        "Improbable.Gdk.Generated",
+        "Improbable.Gdk.PlayerLifecycle",
+        "Unity.Entities",
+        "Unity.Entities.Hybrid",
+        "Unity.Mathematics",
+        "Improbable.Gdk.GameObjectCreation",
+        "Improbable.Gdk.TransformSynchronization",
+        "Unity.Physics",
+        "Unity.Transforms",
+        "Unity.Collections",
+        "Unity.Rendering.Hybrid"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

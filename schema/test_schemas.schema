@@ -1,0 +1,73 @@
+package blank_project;
+
+import "improbable/standard_library.schema";
+
+type IntAbsolute {
+	sint32 x = 1;
+	sint32 y = 2;
+	sint32 z = 3;
+}
+
+type Empty {}
+
+type TransformInfo{
+	IntAbsolute position = 1;
+	IntAbsolute rotation = 2;
+	sint32 delta_time = 3;
+}
+
+type EntityTransformInfo{
+	EntityId entity_id = 1;
+	TransformInfo transform_info = 2;
+}
+
+type UnitsTransformPackage{
+	list<EntityTransformInfo> entity_transform_infos = 1;
+}
+
+type SpawnRequest{
+	string prefix_name = 1;
+	int32 amount = 2;
+}
+
+type MoveCubeInfo{
+	list<EntityId> ids = 1;
+}
+
+component SvTestCommand{
+	id = 4001;
+	
+	command Empty test_command(Empty);
+	
+	command Empty spawn_movecube(SpawnRequest);
+	command Empty delete_movecube(MoveCubeInfo);
+	command Empty clear_movecubes(Empty);
+}
+
+component PlayerState
+{
+    id = 4002;
+
+    string name = 1;
+}
+
+component MoveCube
+{
+	id = 4003;
+}
+
+component Player{
+	id = 4004;
+}
+
+component ClientUnitTransform{
+	id = 4005;
+	TransformInfo info = 1;
+	
+	event TransformInfo units_transform_changed;
+}
+
+component ServerUnitTransform{
+	id = 4006;
+	event UnitsTransformPackage units_transform_sync;
+}

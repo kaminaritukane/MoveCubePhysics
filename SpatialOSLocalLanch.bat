@@ -1,0 +1,1 @@
+spatial local launch --enable_pre_run_check=false --runtime_ip="192.168.0.1"

@@ -1,0 +1,46 @@
+{
+  "dependencies": {
+    "com.unity.burst": "1.1.2",
+    "com.unity.ide.rider": "1.1.0",
+    "com.unity.package-manager-ui": "2.2.0",
+    "com.unity.physics": "0.1.0-preview",
+    "com.unity.postprocessing": "2.1.4",
+    "com.unity.rendering.hybrid": "0.1.1-preview",
+    "com.unity.ugui": "1.0.0",
+    "io.improbable.gdk.buildsystem": "0.3.0",
+    "io.improbable.gdk.core": "0.3.0",
+    "io.improbable.gdk.debug": "0.3.0",
+    "io.improbable.gdk.deploymentlauncher": "0.3.0",
+    "io.improbable.gdk.gameobjectcreation": "0.3.0",
+    "io.improbable.gdk.mobile": "0.3.0",
+    "io.improbable.gdk.playerlifecycle": "0.3.0",
+    "io.improbable.gdk.querybasedinteresthelper": "0.3.0",
+    "io.improbable.gdk.testutils": "0.3.0",
+    "io.improbable.gdk.tools": "0.3.0",
+    "io.improbable.gdk.transformsynchronization": "0.3.0",
+    "com.unity.modules.ai": "1.0.0",
+    "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.imgui": "1.0.0",
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.modules.particlesystem": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.physics2d": "1.0.0",
+    "com.unity.modules.ui": "1.0.0",
+    "com.unity.modules.unityanalytics": "1.0.0",
+    "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.modules.vr": "1.0.0",
+    "com.unity.modules.wind": "1.0.0",
+    "com.unity.modules.xr": "1.0.0"
+  },
+  "registry": "https://packages.unity.com",
+  "scopedRegistries": [
+    {
+      "name": "Improbable",
+      "url": "https://npm.improbable.io/gdk-for-unity/",
+      "scopes": [
+        "io.improbable"
+      ]
+    }
+  ]
+}

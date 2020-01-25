@@ -1,0 +1,168 @@
+Test in 2020-01-17
+SMC moved by physics in ecs.
+SMC can collide with each other and walls
+Position update frequency: 15 hz / cube
+Server worker amount: 1
+
+(Local)[Client in Editor, Server in Editor, SpOS runtime]
+0		SMC - Local CPU: 23%, Server Transform Out: 	0.5KB/s
+1		SMC - Local CPU: 32%, Server Transform Out: 	1.0KB/s
+10		SMC - Local CPU: 34%, Server Transform Out: 	6.5KB/s
+100		SMC - Local CPU: 44%, Server Transform Out:    60.5KB/s
+1000	SMC - Local CPU: 81%, Server Transform Out:   640.0KB/s
+2000	SMC - Local CPU: 83%, Server Transform Out:  1280.0KB/s
+3000	SMC - Local CPU: 87%, Server Transform Out:  1300.0KB/s (server FPS 10)
+4000	SMC - Local CPU: 88%, Server Transform Out:  1690.0KB/s (server FPS 10)
+
+(Local)[Client standalong] - LAN - (Remote)[Server in standalong, SpOS Runtime]:
+0		SMC - Server CPU:  4%, Network egress:	  230Kbps(	  KB/s)
+1		SMC - Server CPU:  5%, Network egress:	  250Kbps(	  KB/s)
+100		SMC - Server CPU:  6%, Network egress:	  800Kbps(	  KB/s)
+500		SMC - Server CPU:  9%, Network egress:	 3400Kbps(	  KB/s)
+1000	SMC - Server CPU: 13%, Network egress:	 7100Kbps(	  KB/s)
+2000	SMC - Server CPU: 18%, Network egress:	13000Kbps(	  KB/s)
+3000	SMC - Server CPU: 25%, Network egress:	20000Kbps(	  KB/s)
+4000	SMC - Server CPU: 37%, Network egress:	25000Kbps(	  KB/s)
+5000	SMC - Server CPU: 48%, Network egress:	32000Kbps(	  KB/s)
+6000	SMC - Server CPU: 60%, Network egress:	46000Kbps(	  KB/s)
+6500	SMC - Server CPU: 75%, Network egress:	50000Kbps(	  KB/s) (Kicked off)
+7000	SMC - Server CPU: 76%, Network egress:	55000Kbps(	  KB/s) (Kicked off)
+
+(Local)[Client standalong] - WAN - (Remote)[Server in Cloud, SpOS Runtime in Cloud]:
+0		SMC - Server CPU:   1.9%, Network egress:   	 4.0KB/s
+1		SMC - Server CPU:   2.5%, Network egress:  	     5.0KB/s
+500		SMC - Server CPU:  10.0%, Network egress:      500.0KB/s
+1000	SMC - Server CPU:  18.8%, Network egress:     1000.0KB/s
+1500	SMC - Server CPU:  25.0%, Network egress:     1400.0KB/s
+2000	SMC - Server CPU:  37.0%, Network egress:     2400.0KB/s (Client receiving msg lags -> stopped receiving -> kicked off )
+
+
+Test in 2020-01-14
+Make transform data smaller. 
+  double3 postion    -> sint32x3 position
+  float   delta_time -> sint32   delta_time
+Position update frequency: 15 hz / cube
+Server worker amount: 9
+
+(Local)[Client in Editor, Server in Editor, SpOS runtime]
+0		SMC - Server Transform Out: 	0.5KB/s
+1		SMC - Server Transform Out: 	1.0KB/s
+10		SMC - Server Transform Out:		6.0KB/s
+100		SMC - Server Transform Out:	   54.0KB/s
+1000	SMC - Server Transform Out:	  560.0KB/s
+2000	SMC - Server Transform Out:	 1100.0KB/s
+3000	SMC - Server Transform Out:	 1650.0KB/s
+4000	SMC - Server Transform Out:	 2250.0KB/s
+5000	SMC - Server Transform Out:	 2500.0KB/s 
+6000	SMC - Server Transform Out:	 2540.0KB/s (server FPS 11)
+7000	SMC - Server Transform Out:	 2700.0KB/s (server FPS 10)
+8000	SMC - Server Transform Out:	 3070.0KB/s (server FPS 10)
+9000	SMC - Server Transform Out:	 3450.0KB/s (server FPS 10)
+10000	SMC - Server Transform Out:	 3833.0KB/s (server FPS 10)
+
+(Local)[Client standalong] - LAN - (Remote)[Server in standalong, SpOS Runtime]:
+0		SMC - Server CPU:  4%, Network egress:	  200Kbps(	  25KB/s)
+1		SMC - Server CPU:  4%, Network egress:	  200Kbps(	  25KB/s)
+10		SMC - Server CPU:  4%, Network egress:	  270Kbps(	  34KB/s)
+100		SMC - Server CPU:  4%, Network egress:	  750Kbps(	  94KB/s)
+1000	SMC - Server CPU:  5%, Network egress:	 6000Kbps(	 750KB/s)
+1500	SMC - Server CPU:  6%, Network egress:	 9000Kbps(	1125KB/s)
+2000	SMC - Server CPU:  7%, Network egress:	11000Kbps(  1375KB/s)
+2500	SMC - Server CPU:  7%, Network egress:	13000Kbps(  1625KB/s)
+3000	SMC - Server CPU:  8%, Network egress:	15000Kbps(  1875KB/s)
+3500	SMC - Server CPU:  9%, Network egress:	19000Kbps(  2375KB/s)
+4000	SMC - Server CPU: 10%, Network egress:	21000Kbps(  2625KB/s)
+4500	SMC - Server CPU: 11%, Network egress:	23000Kbps(  2875KB/s)
+5000	SMC - Server CPU: 12%, Network egress:	25000Kbps(  3125KB/s)
+5500	SMC - Server CPU: 13%, Network egress:	32000Kbps(  4000KB/s) (Kicked off)
+6000	SMC - Server CPU: 13%, Network egress:	32000Kbps(  4000KB/s) (2nd time)
+6500	SMC - Server CPU: 15%, Network egress:	34000Kbps(  4250KB/s) (2nd time)
+7000	SMC - Server CPU: 16%, Network egress:	38000Kbps(  4750KB/s) (2nd time, Kicked off)
+  
+(Local)[Client standalong] - WAN - (Remote)[Server in Cloud, SpOS Runtime in Cloud]:
+0		SMC - Server CPU:  8.3%, Network egress:   	 4.0KB/s
+1		SMC - Server CPU:  8.7%, Network egress:  	 5.6KB/s
+10		SMC - Server CPU: 10.0%, Network egress:    12.3KB/s
+100		SMC - Server CPU: 13.5%, Network egress:    83.0KB/s
+500		SMC - Server CPU: 21.0%, Network egress:   403.0KB/s
+1000	SMC - Server CPU: 31.0%, Network egress:   790.0KB/s
+1500	SMC - Server CPU: 45.0%, Network egress:  1136.0KB/s
+2000	SMC - Server CPU: 63.0%, Network egress:  1751.0KB/s
+2500	SMC - Server CPU:    ?%, Network egress:       ?KB/s  (Client receiving msg lags -> stopped receiving)
+
+
+
+
+===========================================================================================
+
+
+Test in 2020-01-13
+
+Position update frequency: 15 hz / cube
+(Local)[Client standalong] - WAN - (Remote)[Server in Cloud, SpOS Runtime in Cloud]:??? CPU and Network egress not correct?
+0		SMC - Server CPU:    8%, Network egress:  	4.5KB/s
+1		SMC - Server CPU:  8.4%, Network egress: 	5.1KB/s
+10		SMC - Server CPU:  9.4%, Network egress:    9.2KB/s
+100		SMC - Server CPU: 10.4%, Network egress:   15.8KB/s
+1000	SMC - Server CPU: 24.5%, Network egress:  406.0KB/s (Client lags, kicked off)
+
+
+Position update frequency: 15 hz / cube
+(Local)[Client in Editor, Server in Editor, SpOS runtime]
+1		SMC - Server Transform Out: 	1.5KB/s
+10		SMC - Server Transform Out:		8.0KB/s
+100		SMC - Server Transform Out:	   78.0KB/s
+1000	SMC - Server Transform Out:	  770.0KB/s
+2000	SMC - Server Transform Out:	 1500.0KB/s
+3000	SMC - Server Transform Out:	 2300.0KB/s
+4000	SMC - Server Transform Out:	 3000.0KB/s
+5000	SMC - Server Transform Out:	 3800.0KB/s 
+6000	SMC - Server Transform Out:	 4300.0KB/s 
+7000	SMC - Server Transform Out:	 4400.0KB/s (server FPS 12)
+8000	SMC - Server Transform Out:	 4420.0KB/s (server FPS 11)
+9000	SMC - Server Transform Out:	 4600.0KB/s (server FPS 10)
+10000	SMC - Server Transform Out:	 5100.0KB/s (server FPS 10)
+
+
+Position update frequency: 15 hz / cube
+(Local)[Client standalong, Server standalong, SpOS runtime]
+0		SMC - Local CPU:12%, Server FPS: 14.98
+1000	SMC - Local CPU:18%, Server FPS: 14.98
+2000	SMC - Local CPU:25%, Server FPS: 14.98
+3000	SMC - Local CPU:33%, Server FPS: 14.98
+4000	SMC - Local CPU:38%, Server FPS: 14.98
+5000	SMC - Local CPU:44%, Server FPS: 14.98
+6000	SMC - Local CPU:50%, Server FPS: 14.98
+7000	SMC - Local CPU:56%, Server FPS: 14.98
+8000	SMC - Local CPU:64%, Server FPS: 14.98
+9000	SMC - Local CPU:74%, Server FPS: 14.98
+10000	SMC - Local CPU:76%, Server FPS: 14.98
+11000	SMC - Local CPU:80~100%, Server FPS: 14.98 (Runtime Freeze)
+
+
+Position update frequency: 15 hz / cube
+(Local)[Client in Editor] - LAN - (Remote)[Server in standalong, SpOS Runtime]:
+0		SMC - Server CPU:  4%, Server Transform Out:		0.7KB/s, Network egress:  200Kbps(	  25KB/s)
+1		SMC - Server CPU:  4%, Server Transform Out:		1.5KB/s, Network egress:  200Kbps(	  25KB/s)
+10		SMC - Server CPU:  4%, Server Transform Out:		8.0KB/s, Network egress:  240Kbps(	  30KB/s)
+100		SMC - Server CPU:  4%, Server Transform Out:	   80.0KB/s, Network egress:  900Kbps(	 113KB/s)
+1000	SMC - Server CPU:  5%, Server Transform Out:	  800.0KB/s, Network egress: 9500Kbps(	1188KB/s)
+2000	SMC - Server CPU:  7%, Server Transform Out:	 1000.0KB/s, Network egress: 9800Kbps(	1125KB/s) (kicked off)
+
+
+Position update frequency: 15 hz / cube
+(Local)[Client standalong] - LAN - (Remote)[Server in standalong, SpOS Runtime]:
+0		SMC - Server CPU:  4%, Network egress:	  200Kbps(	  25KB/s)
+1		SMC - Server CPU:  4%, Network egress:	  200Kbps(	  25KB/s)
+1000	SMC - Server CPU:  6%, Network egress:	 9800Kbps(	1225KB/s)
+2000	SMC - Server CPU:  7%, Network egress:	10000Kbps(  1250KB/s) (kicked off)
+
+
+Position update frequency: 15 hz / cube
+(Local)[Client in Editor] - LAN - (Remote)[Server in Editor, SpOS Runtime]:
+0		SMC - Server CPU:  7%, Server Transform Out:		0.7KB/s, Network egress:  200Kbps(	  25KB/s)
+1		SMC - Server CPU:  7%, Server Transform Out:		1.5KB/s, Network egress:  200Kbps(	  25KB/s)
+10		SMC - Server CPU:  8%, Server Transform Out:		8.0KB/s, Network egress:  280Kbps(	  30KB/s)
+100		SMC - Server CPU:  9%, Server Transform Out:	   80.0KB/s, Network egress:  900Kbps(	 113KB/s)
+1000	SMC - Server CPU: 10%, Server Transform Out:	  800.0KB/s, Network egress: 9500Kbps(	1188KB/s)
+2000	SMC - Server CPU: 10%, Server Transform Out:	 1000.0KB/s, Network egress: 9800Kbps(	1125KB/s) (kicked off)

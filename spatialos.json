@@ -1,0 +1,8 @@
+{
+    "name": "beta_florida_bravo_995",
+    "project_version": "0.0.1",
+    "sdk_version": "14.0.1",
+    "dependencies": [
+        {"name": "standard_library", "version": "14.0.1"}
+    ]
+}

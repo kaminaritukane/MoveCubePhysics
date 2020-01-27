@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -9,7 +10,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-//[DisableAutoCreation]
+[DisableAutoCreation]
 //[UpdateAfter(typeof())]
 public class PhysicsBodiesMoveSystem : JobComponentSystem
 {
@@ -54,6 +55,7 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
         );
 
         colorChangeQuery = GetEntityQuery(
+            ComponentType.ReadOnly<CubeColor>(),
             ComponentType.ReadOnly<CubeColorChanged>()
         );
 
@@ -97,18 +99,20 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
         var meshData = prefab.GetComponent<MeshFilter>().sharedMesh;
         var material = prefab.GetComponent<MeshRenderer>().sharedMaterial;
 
-        material.color = Color.red;
+        var redMat = new UnityEngine.Material(material);
+        redMat.color = Color.red;
         redRenderMesh = new RenderMesh()
         {
             mesh = meshData,
-            material = material
+            material = redMat
         };
 
-        material.color = Color.blue;
+        var blueMat = new UnityEngine.Material(material);
+        blueMat.color = Color.blue;
         blueRenderMesh = new RenderMesh()
         {
             mesh = meshData,
-            material = material
+            material = blueMat
         };
 
         var sharedCollider = Unity.Physics.BoxCollider.Create(float3.zero,
@@ -116,11 +120,12 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
             null, 
             new Unity.Physics.Material {
                 Friction = 0f,
-                Restitution = 1f
+                Restitution = 1f,
+                Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
             }
         );
 
-        int count = 10;
+        int count = SystemCreator.Instance.cubeCount;
         for (int i = 0; i < count; ++i)
         {
             CreateDynamicBody(redRenderMesh, sharedCollider);
@@ -200,7 +205,7 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
 
         EntityManager.SetComponentData(entity, new CubeColor
         {
-            isRed = random.NextBool()
+            isRed = true //random.NextBool()
         });
     }
 
@@ -223,54 +228,70 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
         {
             moveEntities = physicsQuery.ToEntityArray(Allocator.TempJob),
             velocityGroup = GetComponentDataFromEntity<PhysicsVelocity>(),
-            rotateDirGroup = GetComponentDataFromEntity<RotateDir>(),
+            rotateDirGroup = GetComponentDataFromEntity<RotateDir>(true),
             deltaTime = Time.deltaTime,
             random = random
         }.Schedule(inputDeps);
 
-        JobHandle triggerEventHandle = new TriggerEventEntitiesJob()
+        //JobHandle triggerEventHandle = new TriggerEventEntitiesJob()
+        //{
+        //    CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer(),
+        //    cubeColorGroup = GetComponentDataFromEntity<CubeColor>(),
+        //}.Schedule(m_StepPhysicsWorldSystem.Simulation,
+        //    ref m_BuildPhysicsWorldSystem.PhysicsWorld,
+        //    moveJobHandle
+        //);
+        //m_EntityCommandBufferSystem.AddJobHandleForProducer(triggerEventHandle);
+        //triggerEventHandle.Complete();
+
+        //inputDeps = JobHandle.CombineDependencies(inputDeps, m_BuildPhysicsWorldSystem.FinalJobHandle);
+        //inputDeps = JobHandle.CombineDependencies(inputDeps, m_StepPhysicsWorldSystem.FinalJobHandle);
+
+        JobHandle collisionEventHandle = new CollisionEventJob()
         {
             CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer(),
-            cubeColorGroup = GetComponentDataFromEntity<CubeColor>(),
+            cubeColorGroup = GetComponentDataFromEntity<CubeColor>()
         }.Schedule(m_StepPhysicsWorldSystem.Simulation,
             ref m_BuildPhysicsWorldSystem.PhysicsWorld,
             moveJobHandle
         );
-        m_EntityCommandBufferSystem.AddJobHandleForProducer(triggerEventHandle);
-        triggerEventHandle.Complete();
+        m_EntityCommandBufferSystem.AddJobHandleForProducer(collisionEventHandle);
+        collisionEventHandle.Complete();
 
-        var cubeColors = GetComponentDataFromEntity<CubeColor>();
         var changedEntities = colorChangeQuery.ToEntityArray(Allocator.TempJob);
         for (int i = 0; i < changedEntities.Length; ++i)
         {
             var entity = changedEntities[i];
-            var color = cubeColors[entity];
+            var color = EntityManager.GetComponentData<CubeColor>(entity);
             EntityManager.SetSharedComponentData(entity, color.isRed ? redRenderMesh : blueRenderMesh);
+
+            EntityManager.RemoveComponent<CubeColorChanged>(entity);
         }
         changedEntities.Dispose();
 
-        return triggerEventHandle;
+        return collisionEventHandle;
     }
 
+    [BurstCompile]
     struct MovePhysicsCubeJob : IJob
     {
         [DeallocateOnJobCompletion] [ReadOnly] public NativeArray<Entity> moveEntities;
 
         public ComponentDataFromEntity<PhysicsVelocity> velocityGroup;
-        public ComponentDataFromEntity<RotateDir> rotateDirGroup;
+        [ReadOnly] public ComponentDataFromEntity<RotateDir> rotateDirGroup;
         [ReadOnly] public float deltaTime;
         [ReadOnly] public Unity.Mathematics.Random random;
 
         public void Execute()
         {
-            for ( int i=0; i<moveEntities.Length; ++i )
+            for (int i = 0; i < moveEntities.Length; ++i)
             {
                 var entity = moveEntities[i];
                 var phyVel = velocityGroup[entity];
                 var rotDir = rotateDirGroup[entity];
                 MoveForward(ref phyVel, ref rotDir);
                 velocityGroup[entity] = phyVel;
-                rotateDirGroup[entity] = rotDir;
+                //rotateDirGroup[entity] = rotDir;
             }
         }
 
@@ -289,17 +310,53 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
         }
     }
 
-    struct TriggerEventEntitiesJob : ITriggerEventsJob
+    //struct TriggerEventEntitiesJob : ITriggerEventsJob
+    //{
+    //    public EntityCommandBuffer CommandBuffer;
+
+    //    public ComponentDataFromEntity<CubeColor> cubeColorGroup;
+
+
+    //    public void Execute(TriggerEvent triggerEvent)
+    //    {
+    //        Entity entityA = triggerEvent.Entities.EntityA;
+    //        Entity entityB = triggerEvent.Entities.EntityB;
+
+    //        if (cubeColorGroup.Exists(entityA))
+    //        {
+    //            var cubeColor = cubeColorGroup[entityA];
+    //            cubeColor.isRed = !cubeColor.isRed;
+    //            cubeColorGroup[entityA] = cubeColor;
+
+    //            CommandBuffer.AddComponent<CubeColorChanged>(entityA);
+    //        }
+
+    //        if (cubeColorGroup.Exists(entityB))
+    //        {
+    //            var cubeColor = cubeColorGroup[entityB];
+    //            cubeColor.isRed = !cubeColor.isRed;
+    //            cubeColorGroup[entityB] = cubeColor;
+
+    //            CommandBuffer.AddComponent<CubeColorChanged>(entityB);
+    //        }
+    //    }
+    //}
+
+    [BurstCompile]
+    struct CollisionEventJob : ICollisionEventsJob
     {
         public EntityCommandBuffer CommandBuffer;
 
         public ComponentDataFromEntity<CubeColor> cubeColorGroup;
 
+        //public RenderMesh redRenderMesh;
+        //public RenderMesh blueRenderMesh;
 
-        public void Execute(TriggerEvent triggerEvent)
+        public void Execute(CollisionEvent collisionEvent)
         {
-            Entity entityA = triggerEvent.Entities.EntityA;
-            Entity entityB = triggerEvent.Entities.EntityB;
+            //Debug.Log($"{collisionEvent.Entities.EntityA} <-> {collisionEvent.Entities.EntityB}");
+            var entityA = collisionEvent.Entities.EntityA;
+            var entityB = collisionEvent.Entities.EntityB;
 
             if (cubeColorGroup.Exists(entityA))
             {
@@ -308,6 +365,8 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
                 cubeColorGroup[entityA] = cubeColor;
 
                 CommandBuffer.AddComponent<CubeColorChanged>(entityA);
+
+                //CommandBuffer.SetSharedComponent(entityA, cubeColor.isRed ? redRenderMesh : blueRenderMesh);
             }
 
             if (cubeColorGroup.Exists(entityB))
@@ -317,6 +376,8 @@ public class PhysicsBodiesMoveSystem : JobComponentSystem
                 cubeColorGroup[entityB] = cubeColor;
 
                 CommandBuffer.AddComponent<CubeColorChanged>(entityB);
+
+                //CommandBuffer.SetSharedComponent(entityA, cubeColor.isRed ? redRenderMesh : blueRenderMesh);
             }
         }
     }

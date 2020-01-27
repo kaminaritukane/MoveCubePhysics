@@ -6,5 +6,6 @@ namespace ServerCommon
     public struct MovementComponent : IComponentData
     {
         public TransformInfo info;
+        public bool isRed;
     }
 }

@@ -108,7 +108,8 @@ public class ServerUnitTransformSyncSystem : ComponentSystem
                 trans.DeltaTime = delta.ToInt100k();
                 entityTransInfos.Add(new EntityTransformInfo {
                     EntityId = sId.EntityId,
-                    TransformInfo = trans
+                    TransformInfo = trans,
+                    IsRed = moveComp.isRed
                 });
             }
         );

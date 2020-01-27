@@ -12,7 +12,8 @@
         "Unity.Physics",
         "Unity.Transforms",
         "Unity.Collections",
-        "Unity.Rendering.Hybrid"
+        "Unity.Rendering.Hybrid",
+        "Unity.Burst"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

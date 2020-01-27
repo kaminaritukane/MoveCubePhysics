@@ -19,6 +19,7 @@ type TransformInfo{
 type EntityTransformInfo{
 	EntityId entity_id = 1;
 	TransformInfo transform_info = 2;
+	bool is_red = 3;
 }
 
 type UnitsTransformPackage{

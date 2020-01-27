@@ -39,6 +39,7 @@ public class MovementPackageReceiver : MonoBehaviour
                 transInterpolation.nextPosition = trans.Position.ToVector3();
                 transInterpolation.nextRotation = Quaternion.Euler(trans.Rotation.ToVector3());
                 transInterpolation.deltaTime = trans.DeltaTime.ToFloat100k();
+                transInterpolation.isRed = info.IsRed;
             }
 
         }

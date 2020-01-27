@@ -66,7 +66,7 @@ namespace BlankProject
             Worker.World.GetOrCreateSystem<MetricSendSystem>();
             Worker.World.GetOrCreateSystem<ServerUnitTransformCmdSystem>();
 
-            //Worker.World.GetOrCreateSystem<ServerCubeMoveSystem>();
+            Worker.World.GetOrCreateSystem<PhysicsCubeCreateSystem_SpatialOS>();
             Worker.World.GetOrCreateSystem<PhysicsBodiesMoveSystem_SpatialOS>();
 
             Worker.World.GetOrCreateSystem<ServerPlayerMovementSystem>();

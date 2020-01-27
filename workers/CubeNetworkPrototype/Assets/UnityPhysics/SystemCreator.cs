@@ -4,13 +4,18 @@ using UnityEngine;
 public class SystemCreator : MonoBehaviour
 {
     //private PhysicsBodiesMoveSystem moveSys;
+    public int cubeCount = 1;
+
+    static public SystemCreator Instance = null;
 
     private void Start()
     {
-        //var compSysGroup = World.Active.GetExistingSystem<SimulationSystemGroup>();
+        Instance = this;
 
-        //var moveSys = World.Active.GetOrCreateSystem<PhysicsBodiesMoveSystem>();
+        var compSysGroup = World.Active.GetExistingSystem<SimulationSystemGroup>();
 
-        //compSysGroup.AddSystemToUpdateList(moveSys);
+        var moveSys = World.Active.GetOrCreateSystem<PhysicsBodiesMoveSystem>();
+
+        compSysGroup.AddSystemToUpdateList(moveSys);
     }
 }

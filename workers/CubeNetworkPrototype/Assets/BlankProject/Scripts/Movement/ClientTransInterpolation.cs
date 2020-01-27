@@ -1,5 +1,6 @@
 ﻿using BlankProject;
 using Improbable.Gdk.Subscriptions;
+using Scripts.Sphere;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,31 @@ public class ClientTransInterpolation : MonoBehaviour
     public Quaternion nextRotation { get; set; }
     public float deltaTime { get; set; }
 
+    private bool _isRed = false;
+    public bool isRed {
+        get
+        {
+            return _isRed;
+        }
+        set 
+        { 
+            if ( value != _isRed )
+            {
+                _isRed = value;
+
+                colorBehaviour.SetColor(_isRed ? Color.red : Color.blue);
+            }
+        }
+    }
+
+    private ObjectColorBehaviour colorBehaviour;
+
     private Vector3 workerOrigin = Vector3.zero;
 
     private void Start()
     {
         workerOrigin = GetComponent<LinkedEntityComponent>().Worker.Origin;
+        colorBehaviour = GetComponent<ObjectColorBehaviour>();
     }
 
     private void Update()

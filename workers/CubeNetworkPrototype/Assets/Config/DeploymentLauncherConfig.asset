@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: DeploymentLauncherConfig
   m_EditorClassIdentifier: 
   AssemblyConfig:
-    ProjectName: beta_florida_bravo_995
+    ProjectName: beta_speaker_nine_958
     AssemblyName: network_prototype_pure
     ShouldForceUpload: 1
   DeploymentConfigs:
-  - ProjectName: beta_florida_bravo_995
+  - ProjectName: beta_speaker_nine_958
     AssemblyName: network_prototype_pure
     Deployment:
       Name: network_prototype_deployment

@@ -7,6 +7,8 @@ namespace Scripts.Sphere
     public class ObjectColorBehaviour : MonoBehaviour
     {
         [SerializeField] private Color color;
+        [SerializeField] private Material red;
+        [SerializeField] private Material blue;
 
         private Renderer render;
 
@@ -18,8 +20,15 @@ namespace Scripts.Sphere
 
         public void SetColor(Color newColor)
         {
-            color = newColor;
-            render.material.color = color;
+            //render.sharedMaterial.color = newColor;
+            if (newColor == Color.blue)
+            {
+                render.sharedMaterial = blue;
+            }
+            else if ( newColor == Color.red )
+            {
+                render.sharedMaterial = red;
+            }
         }
     }
 }
